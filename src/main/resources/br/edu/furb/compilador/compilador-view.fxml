@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import org.fxmisc.flowless.*?>
+<?import org.fxmisc.richtext.*?>
+<?import org.kordamp.ikonli.javafx.*?>
+
+<?import br.edu.furb.compilador.MyCodeArea?>
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
+    <top>
+      <ToolBar maxHeight="1.7976931348623157E308" minHeight="70.0" minWidth="900.0" prefHeight="70.0" prefWidth="900.0" BorderPane.alignment="CENTER">
+          <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#novoArquivo" text="novo [crtl-n]">
+            <graphic>
+                <FontIcon iconLiteral="mdi2f-file-plus" iconSize="24" />
+            </graphic>
+          </Button>
+        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#abrirArquivo" text="abrir [crtl-o]">
+            <graphic>
+                <FontIcon iconLiteral="mdi2f-folder" iconSize="24" />
+            </graphic>
+        </Button>
+        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#salvarArquivo" text="salvar [crtl-s]">
+            <graphic>
+                <FontIcon iconLiteral="mdi2c-content-save" iconSize="24" />
+            </graphic>
+        </Button>
+        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#copiar" text="copiar [crtl-c]">
+            <graphic>
+                <FontIcon iconLiteral="mdi2c-content-copy" iconSize="24" />
+            </graphic>
+        </Button>
+        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#colar" text="colar [crtl-v]">
+            <graphic>
+                <FontIcon iconLiteral="mdi2c-content-paste" iconSize="24" />
+            </graphic>
+        </Button>
+        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#recortar" text="recortar [crtl-x]">
+            <graphic>
+                <FontIcon iconLiteral="mdi2c-content-cut" iconSize="24" />
+            </graphic>
+        </Button>
+        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#compilar" text="compilar [F7]">
+            <graphic>
+                <FontIcon iconLiteral="mdi2f-file-cog" iconSize="24" />
+            </graphic>
+        </Button>
+        <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#mostrarEquipe" text="equipe [F1]">
+            <graphic>
+                <FontIcon iconLiteral="mdi2a-account-group" iconSize="24" />
+            </graphic>
+        </Button>
+      </ToolBar>
+   </top>
+   <bottom>
+       <TextFlow minHeight="25.0" minWidth="900.0" prefHeight="25.0" prefWidth="900.0" style="-fx-padding: 4;" BorderPane.alignment="CENTER">
+           <Label fx:id="status" graphicTextGap="5.0" />
+       </TextFlow>
+   </bottom>
+   <center>
+       <SplitPane dividerPositions="0.8" orientation="VERTICAL" prefHeight="200.0" BorderPane.alignment="CENTER">
+           <VirtualizedScrollPane fx:id="scrollPane" hbarPolicy="ALWAYS" vbarPolicy="ALWAYS">
+               <content>
+                   <MyCodeArea fx:id="codeArea" wrapText="false" />
+               </content>
+           </VirtualizedScrollPane>
+            <VirtualizedScrollPane hbarPolicy="ALWAYS" vbarPolicy="ALWAYS">
+                <content>
+                    <CodeArea fx:id="areaMensagens" editable="false" wrapText="false" />
+                </content>
+            </VirtualizedScrollPane>
+       </SplitPane>
+   </center>
+</BorderPane>

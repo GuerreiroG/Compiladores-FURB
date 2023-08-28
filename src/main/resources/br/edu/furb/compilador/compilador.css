@@ -1,0 +1,87 @@
+
+.tool-bar {
+    -fx-background-color: #f1f1f0;
+    -fx-border-width: 0 0 .5 0;
+    -fx-border-color: rgb(128, 128, 128);
+}
+
+.text-area > .scroll-pane{
+    -fx-vbar-policy:always;
+    -fx-hbar-policy:always;
+}
+
+.button {
+    -fx-background-color: rgba(211, 211, 211, 0.39);
+    -fx-border-radius: 0;
+    -fx-border-width: 0;
+    -fx-border-color: black;
+    -fx-padding: 3;
+    -fx-pref-width: 100;
+    -fx-font-family: "Fira Code";
+}
+
+.button:hover {
+    -fx-cursor: pointer;
+    -fx-background-color: lightgray;
+}
+
+#codeArea .styled-text-area .text {
+    -fx-fill: #575656 !important;
+    -fx-font-weight: 300 !important;
+}
+
+.lineno{
+    -fx-font-family: "Source Code Pro";
+    -fx-font-style: italic;
+    -fx-padding: 0 0 0 5;
+    -fx-background-color: lightgray;
+}
+
+.lineno .text {
+    -fx-fill: #545454 !important;
+}
+
+.coluna-linha {
+    -fx-fill: lightgray;
+}
+
+#codeArea .paragraph-box:has-caret{
+    -fx-background-color: #f1f1f0;
+}
+
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar > .increment-button > .increment-arrow,
+.scroll-bar > .decrement-button {
+    -fx-padding: 0 0 0 0;
+    -fx-background-insets: 0;
+}
+
+.scroll-bar:vertical {
+    -fx-pref-width: 13;
+}
+
+.scroll-bar:horizontal {
+    -fx-pref-height: 13;
+}
+
+.scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: lightgray;
+    -fx-border-radius: 50px;
+}
+
+.scroll-bar .thumb:hover,
+.scroll-bar .thumb:pressed {
+    -fx-background-color: #a6a5a5;
+}
+
+.split-pane-divider {
+    -fx-background-color: rgb(128, 128, 128);
+    -fx-padding: .5;
+}

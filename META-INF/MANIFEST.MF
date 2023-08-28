@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+br.edu.furb.compilador.Main-Class: br.edu.furb.compilador.CompiladorApplication
+
