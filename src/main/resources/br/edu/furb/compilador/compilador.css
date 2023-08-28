@@ -5,11 +5,6 @@
     -fx-border-color: rgb(128, 128, 128);
 }
 
-.text-area > .scroll-pane{
-    -fx-vbar-policy:always;
-    -fx-hbar-policy:always;
-}
-
 .button {
     -fx-background-color: rgba(211, 211, 211, 0.39);
     -fx-border-radius: 0;
@@ -17,7 +12,6 @@
     -fx-border-color: black;
     -fx-padding: 3;
     -fx-pref-width: 100;
-    -fx-font-family: "Fira Code";
 }
 
 .button:hover {
@@ -51,12 +45,6 @@
 
 .scroll-bar {
     -fx-background-color: transparent;
-}
-
-.scroll-bar > .increment-button > .increment-arrow,
-.scroll-bar > .decrement-button {
-    -fx-padding: 0 0 0 0;
-    -fx-background-insets: 0;
 }
 
 .scroll-bar:vertical {
