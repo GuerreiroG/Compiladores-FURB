@@ -1,5 +1,8 @@
-package br.edu.furb.compilador;
+package br.edu.furb.compilador.interfaces;
 
+import br.edu.furb.compilador.gals.LexicalError;
+import br.edu.furb.compilador.gals.Lexico;
+import br.edu.furb.compilador.gals.Token;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -19,6 +22,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.function.IntFunction;
 
@@ -70,7 +74,49 @@ public class CompiladorController implements Initializable {
 
     public void compilar() {
         areaMensagens.clear();
-        areaMensagens.insertText(0, "compilação de programas ainda não foi implementada");
+        Lexico lexico = new Lexico();
+        lexico.setInput(codeArea.getText());
+        try {
+            Token t = null;
+            StringBuilder lexemas = new StringBuilder();
+            lexemas.append(String.format("%-10s%-18s%s\n", "linha", "classe", "lexema"));
+            while ( (t = lexico.nextToken()) != null ) {
+                System.out.println(t.getLexeme());
+                int linha = codeArea.offsetToPosition(t.getPosition(), null).getMajor() + 1;
+                lexemas.append(String.format("%-10s%-18s%s\n", linha, getClasse(t.getId()), t.getLexeme()));
+            }
+            areaMensagens.insertText(0, lexemas.toString());
+        }
+        catch ( LexicalError e ) {
+            System.out.println(e.getMessage() + " em " + e.getPosition());
+            areaMensagens.insertText(0, e.getMessage() + " em " + e.getPosition());
+        }
+    }
+
+    public String getClasse(int id) {
+        switch (id) {
+            case 2, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 -> {
+                return  "palavra_reservada";
+            }
+            case 3 -> {
+                return "identificador";
+            }
+            case 4 -> {
+                return "constante_int";
+            }
+            case 5 -> {
+                return "constante_float";
+            }
+            case 6 -> {
+                return "constante_string";
+            }
+            case 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 -> {
+                return "simbolo especial";
+            }
+            default -> {
+                return "simbolo desconhecido";
+            }
+        }
     }
 
     public void mostrarEquipe() {
@@ -212,7 +258,7 @@ public class CompiladorController implements Initializable {
 
     private void adicionarContadorDeLinha() {
         IntFunction<Node> numberFactory = line -> {
-            String paddedLine = String.format("%5d ", line);
+            String paddedLine = String.format("%5d ", line+1);
             Label label = new Label(paddedLine);
             label.getStyleClass().add("lineno");
             return label;

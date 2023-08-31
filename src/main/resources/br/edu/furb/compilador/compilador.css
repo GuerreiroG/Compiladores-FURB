@@ -43,6 +43,10 @@
     -fx-background-color: #f1f1f0;
 }
 
+#areaMensagens {
+    -fx-padding: 10;
+}
+
 .scroll-bar {
     -fx-background-color: transparent;
 }

@@ -1,0 +1,79 @@
+#Options
+GenerateScanner = true
+GenerateParser = false
+Language = Java
+ScannerName = Lexico
+ScannerCaseSensitive = true
+ScannerTable = Compact
+Input = String
+#RegularDefinitions
+prefixo: _i | _f | _b | _s
+maiúsculo: [A-Z]
+minúsculo: [a-z]
+
+dígito: [0-9]
+posfixo: i | f | s | b
+minúsculo_dígito: {minúsculo} | {dígito}
+#Tokens
+// palavra reservada
+palavra_reservada: {minúsculo} {minúsculo}* 
+
+// identificador
+identificador: {prefixo}(({minúsculo}|{maiúsculo}{minúsculo_dígito})({minúsculo_dígito}|{maiúsculo}{minúsculo_dígito})*{maiúsculo}?|{maiúsculo} )
+
+// constante_int
+int: [1-9]{dígito}*|0
+
+// constante_float
+float: ([1-9]{dígito}*|0)\.({dígito}*[1-9]|0)
+
+// constante_string
+string: \"([^\n\"\\%]|%{posfixo})*\"
+
+// relação palavras reservadas
+// do else false fun if in main out repeat true while
+
+do = palavra_reservada: "do"
+else = palavra_reservada: "else"
+false = palavra_reservada: "false"
+fun = palavra_reservada: "fun"
+if = palavra_reservada: "if"
+in = palavra_reservada: "in"
+main = palavra_reservada: "main"
+out = palavra_reservada: "out"
+repeat = palavra_reservada: "repeat"
+true = palavra_reservada: "true"
+while = palavra_reservada: "while"
+
+
+// relação dos símbolos especiais
+//  & | ! , ; = : ( ) { } == != < > + - *
+"&"
+"|" 
+"!" 
+"," 
+";" 
+"=" 
+":" 
+"(" 
+")" 
+"{" 
+"}" 
+"==" 
+"!=" 
+"<" 
+">" 
+"+"
+"-" 
+"*" 
+"/" 
+
+
+// reconhecer e ignorar caracteres de formatação
+:[\s\t\n\r]
+
+// reconhecer e ignorar comentários
+// linha
+:! #.*
+// bloco
+:! \[ [^\[\]]*\]

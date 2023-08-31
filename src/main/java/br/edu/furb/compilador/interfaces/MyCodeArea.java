@@ -1,4 +1,4 @@
-package br.edu.furb.compilador;
+package br.edu.furb.compilador.interfaces;
 
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
