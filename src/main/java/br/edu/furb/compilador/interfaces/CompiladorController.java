@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.function.IntFunction;
 
@@ -79,23 +78,26 @@ public class CompiladorController implements Initializable {
         try {
             Token t = null;
             StringBuilder lexemas = new StringBuilder();
-            lexemas.append(String.format("%-10s%-18s%s\n", "linha", "classe", "lexema"));
-            while ( (t = lexico.nextToken()) != null ) {
-                System.out.println(t.getLexeme());
+            while ((t = lexico.nextToken()) != null) {
                 int linha = codeArea.offsetToPosition(t.getPosition(), null).getMajor() + 1;
-                lexemas.append(String.format("%-10s%-18s%s\n", linha, getClasse(t.getId()), t.getLexeme()));
+                lexemas.append(String.format("%-8s%-20s%s%n", linha,
+                        getClasse(t.getId(), t.getPosition(), t.getLexeme()), t.getLexeme()));
             }
+            lexemas.append(String.format("%n        %s", "programa compilado com sucesso"));
             areaMensagens.insertText(0, lexemas.toString());
         }
         catch ( LexicalError e ) {
-            System.out.println(e.getMessage() + " em " + e.getPosition());
-            areaMensagens.insertText(0, e.getMessage() + " em " + e.getPosition());
+            int linha = codeArea.offsetToPosition(e.getPosition(), null).getMajor() + 1;
+            String lexema = e.getLexeme() != null ? (e.getLexeme() + " ") : "";
+            String mensagem = String.format("linha %d: %s%s", linha, lexema, e.getMessage());
+            areaMensagens.clear();
+            areaMensagens.insertText(0, mensagem);
         }
     }
 
-    public String getClasse(int id) {
+    public String getClasse(int id, int posicao, String lexema) throws LexicalError {
         switch (id) {
-            case 2, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 -> {
+            case 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 -> {
                 return  "palavra_reservada";
             }
             case 3 -> {
@@ -113,6 +115,7 @@ public class CompiladorController implements Initializable {
             case 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 -> {
                 return "simbolo especial";
             }
+            case 2 -> throw new LexicalError("palavra reservada inválida", posicao, lexema);
             default -> {
                 return "simbolo desconhecido";
             }

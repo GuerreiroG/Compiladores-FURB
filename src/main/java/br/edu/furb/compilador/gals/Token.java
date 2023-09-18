@@ -1,9 +1,6 @@
 package br.edu.furb.compilador.gals;
 
-import java.util.HashMap;
-
-public class Token
-{
+public class Token {
     private int id;
     private String lexeme;
     private int position;
@@ -26,8 +23,8 @@ public class Token
         return position;
     }
 
-    public String toString()
-    {
-        return id+" ( "+lexeme+" ) @ "+position;
-    };
+    public String toString() {
+        return id + " ( " + lexeme + " ) @ " + position;
+    }
+
 }

@@ -3,36 +3,40 @@ GenerateScanner = true
 GenerateParser = false
 Language = Java
 ScannerName = Lexico
+Package = br.edu.furb.compilador.gals
 ScannerCaseSensitive = true
 ScannerTable = Compact
 Input = String
 #RegularDefinitions
 prefixo: _i | _f | _b | _s
-maiúsculo: [A-Z]
-minúsculo: [a-z]
+maiusculo: [A-Z]
+minusculo: [a-z]
 
-dígito: [0-9]
+digito: [0-9]
 posfixo: i | f | s | b
-minúsculo_dígito: {minúsculo} | {dígito}
+minusculo_digito: {minusculo} | {digito}
+
+comentario_linha: #.*
+comentario_bloco: \[ [^\[\]]*\]
 #Tokens
 // palavra reservada
-palavra_reservada: {minúsculo} {minúsculo}* 
+palavra_reservada: {minusculo} {minusculo}* 
 
 // identificador
-identificador: {prefixo}(({minúsculo}|{maiúsculo}{minúsculo_dígito})({minúsculo_dígito}|{maiúsculo}{minúsculo_dígito})*{maiúsculo}?|{maiúsculo} )
+identificador: {prefixo}(({minusculo}|{maiusculo}{minusculo_digito})({minusculo_digito}|{maiusculo}{minusculo_digito})*{maiusculo}?|{maiusculo} )
 
 // constante_int
-int: [1-9]{dígito}*|0
+int: [1-9]{digito}*|0
 
 // constante_float
-float: ([1-9]{dígito}*|0)\.({dígito}*[1-9]|0)
+float: ([1-9]{digito}*|0)\.({digito}*[1-9]|0)
 
 // constante_string
 string: \"([^\n\"\\%]|%{posfixo})*\"
 
-// relação palavras reservadas
-// do else false fun if in main out repeat true while
 
+// relacao palavras reservadas
+// do else false fun if in main out repeat true while
 do = palavra_reservada: "do"
 else = palavra_reservada: "else"
 false = palavra_reservada: "false"
@@ -46,7 +50,7 @@ true = palavra_reservada: "true"
 while = palavra_reservada: "while"
 
 
-// relação dos símbolos especiais
+// relacao dos simbolos especiais
 //  & | ! , ; = : ( ) { } == != < > + - *
 "&"
 "|" 
@@ -68,12 +72,13 @@ while = palavra_reservada: "while"
 "*" 
 "/" 
 
-
-// reconhecer e ignorar caracteres de formatação
+// reconhecer e ignorar caracteres de formatacao
 :[\s\t\n\r]
 
-// reconhecer e ignorar comentários
+// reconhecer e ignorar comentarios
+
 // linha
-:! #.*
+:! {comentario_linha}
+
 // bloco
-:! \[ [^\[\]]*\]
+:! {comentario_bloco}
