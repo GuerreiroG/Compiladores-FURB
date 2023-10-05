@@ -81,33 +81,33 @@
 /* Configurações destacador */
 
 .keyword {
-    -fx-fill: purple !important;
-    -fx-font-weight: bold !important;
+    -fx-fill: purple;
+    -fx-font-weight: bold;
 }
 .semicolon {
-    -fx-font-weight: bold !important;;
+    -fx-font-weight: bold;
 }
 .paren {
-    -fx-fill: firebrick !important;;
+    -fx-fill: firebrick;
     -fx-font-weight: bold;
 }
 .bracket {
-    -fx-fill: darkgreen !important;
+    -fx-fill: darkgreen;
     -fx-font-weight: bold;
 }
 .brace {
-    -fx-fill: teal !important;
+    -fx-fill: teal;
     -fx-font-weight: bold;
 }
 .string {
-    -fx-fill: blue !important;
+    -fx-fill: blue;
 }
 
 .comment {
-    -fx-fill: cadetblue !important;
+    -fx-fill: cadetblue;
 }
 .id {
-    -fx-fill: red !important;
+    -fx-fill: red;
 }
 .prefix {
     -fx-fill: salmon;
