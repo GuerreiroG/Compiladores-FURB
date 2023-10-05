@@ -81,28 +81,35 @@
 /* Configurações destacador */
 
 .keyword {
-    -fx-fill: purple;
-    -fx-font-weight: bold;
+    -fx-fill: purple !important;
+    -fx-font-weight: bold !important;
 }
 .semicolon {
-    -fx-font-weight: bold;
+    -fx-font-weight: bold !important;;
 }
 .paren {
-    -fx-fill: firebrick;
+    -fx-fill: firebrick !important;;
     -fx-font-weight: bold;
 }
 .bracket {
-    -fx-fill: darkgreen;
+    -fx-fill: darkgreen !important;
     -fx-font-weight: bold;
 }
 .brace {
-    -fx-fill: teal;
+    -fx-fill: teal !important;
     -fx-font-weight: bold;
 }
 .string {
-    -fx-fill: blue;
+    -fx-fill: blue !important;
 }
 
 .comment {
-    -fx-fill: cadetblue;
+    -fx-fill: cadetblue !important;
+}
+.id {
+    -fx-fill: red !important;
+}
+.prefix {
+    -fx-fill: salmon;
+    -fx-font-style: italic;
 }

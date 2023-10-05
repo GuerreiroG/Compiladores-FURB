@@ -14,8 +14,8 @@ import javafx.scene.control.Label;
 import javafx.scene.input.*;
 import javafx.stage.FileChooser;
 import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.model.StyleSpans;
-import org.fxmisc.richtext.model.StyleSpansBuilder;
+import org.fxmisc.richtext.model.PlainTextChange;
+import org.reactfx.EventStream;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -25,37 +25,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.function.IntFunction;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class CompiladorController implements Initializable {
-
-    private static final String[] PALAVRAS_RESERVADAS = new String[] {
-            "do", "else", "false", "fun", "if", "in", "main", "out", "repeat", "true", "while"
-    };
-    private static final String PALAVRA_RESERVADA_PADRAO = "\\b(" + String.join("|", PALAVRAS_RESERVADAS) + ")\\b";
-
-    private static final String PARENTESES_PADRAO = "\\(|\\)";
-    private static final String CHAVES_PADRAO = "\\{|\\}";
-    private static final String COLCHETES_PADRAO = "\\[|\\]";
-    private static final String PONTO_VIRGULA_PADRAO = "\\;";
-    private static final String STRING_PADRAO = "\"([^\"\\\\]|\\\\.)*\"";
-    private static final String COMENTARIO_PADRAO = "#[^\n]*" + "|" + "\\[[^\\[\\]]*\\]";
-
-    private static final Pattern PADRAO = Pattern.compile(
-        "(?<KEYWORD>" + PALAVRA_RESERVADA_PADRAO + ")"
-            + "|(?<PAREN>" + PARENTESES_PADRAO + ")"
-            + "|(?<BRACE>" + CHAVES_PADRAO + ")"
-            + "|(?<BRACKET>" + COLCHETES_PADRAO + ")"
-            + "|(?<SEMICOLON>" + PONTO_VIRGULA_PADRAO + ")"
-            + "|(?<STRING>" + STRING_PADRAO + ")"
-            + "|(?<COMMENT>" + COMENTARIO_PADRAO + ")"
-    );
-
 
     private static final String FX_FONT_SIZE = "-fx-font-size: ";
     private static final int MIN_FONT = 8;
@@ -77,32 +50,6 @@ public class CompiladorController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         configurarCodeArea();
     }
-
-    private static StyleSpans<Collection<String>> computarDestaque(String texto) {
-        Matcher matcher = PADRAO.matcher(texto);
-        int lastKwEnd = 0;
-        StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
-        while (matcher.find()) {
-            String styleClass = switch (matcher.group()) {
-                case "KEYWORD" -> "keyword";
-                case "PAREN" -> "paren";
-                case "BRACE" -> "brace";
-                case "BRACKET" -> "bracket";
-                case "SEMICOLON" -> "semicolon";
-                case "STRING" -> "string";
-                case "COMMENT" -> "comment";
-                default -> null;
-            };
-            assert styleClass != null;
-            spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
-            spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
-            lastKwEnd = matcher.end();
-        }
-        spansBuilder.add(Collections.emptyList(), texto.length() - lastKwEnd);
-        return spansBuilder.create();
-    }
-
-
 
     public void configurarAtalhos(Scene scene) {
 
@@ -132,7 +79,7 @@ public class CompiladorController implements Initializable {
         Lexico lexico = new Lexico();
         lexico.setInput(codeArea.getText());
         try {
-            Token t = null;
+            Token t;
             StringBuilder lexemas = new StringBuilder();
             while ((t = lexico.nextToken()) != null) {
                 int linha = codeArea.offsetToPosition(t.getPosition(), null).getMajor() + 1;
@@ -269,13 +216,38 @@ public class CompiladorController implements Initializable {
         configurarZoom();
         configurarTamanhoFonte();
         configurarDestaque();
+        configurarAutoFechamentos();
+    }
+
+    private void configurarAutoFechamentos() {
+        EventStream<PlainTextChange> mudancasTexto = codeArea.plainTextChanges();
+        mudancasTexto.subscribe(event -> {
+            String textoInserido = event.getInserted();
+            int posicaoInsercao = event.getPosition();
+            switch (textoInserido) {
+                case "(":
+                    codeArea.replaceText(posicaoInsercao, posicaoInsercao + 1, "()");
+                    codeArea.moveTo(posicaoInsercao + 1);
+                    break;
+                case "[":
+                    codeArea.replaceText(posicaoInsercao, posicaoInsercao + 1, "[]");
+                    codeArea.moveTo(posicaoInsercao + 1);
+                    break;
+                case "{":
+                    codeArea.replaceText(posicaoInsercao, posicaoInsercao + 1, "{}");
+                    codeArea.moveTo(posicaoInsercao + 1);
+                    break;
+                default:
+                    break;
+            }
+        });
     }
 
     private void configurarDestaque() {
         codeArea
                 .multiPlainChanges()
                 .successionEnds(Duration.ofMillis(200))
-                .subscribe(ignore -> codeArea.setStyleSpans(0, computarDestaque(codeArea.getText())));
+                .subscribe(ignore -> codeArea.setStyleSpans(0, ConfiguracaoDestacador.computarDestaque(codeArea.getText())));
     }
 
     private void configurarTamanhoFonte() {
