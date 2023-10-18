@@ -79,37 +79,25 @@
 }
 
 /* Configurações destacador */
-
-.keyword {
-    -fx-fill: purple;
-    -fx-font-weight: bold;
+.paren, .chave {
+    -fx-fill: #444242;
 }
-.semicolon {
-    -fx-font-weight: bold;
-}
-.paren {
-    -fx-fill: firebrick;
-    -fx-font-weight: bold;
-}
-.bracket {
-    -fx-fill: darkgreen;
-    -fx-font-weight: bold;
-}
-.brace {
-    -fx-fill: teal;
-    -fx-font-weight: bold;
+.reservada {
+    -fx-fill: #c2394f;
 }
 .string {
-    -fx-fill: blue;
+    -fx-fill: #022e6e;
 }
-
-.comment {
-    -fx-fill: cadetblue;
+.comentario {
+    -fx-fill: #808080;
 }
 .id {
-    -fx-fill: red;
+    -fx-fill: #0069e0;
 }
-.prefix {
-    -fx-fill: salmon;
+.prefixo {
+    -fx-fill: #6e43c1;
     -fx-font-style: italic;
+}
+.numero {
+    -fx-fill: #ff6200;
 }

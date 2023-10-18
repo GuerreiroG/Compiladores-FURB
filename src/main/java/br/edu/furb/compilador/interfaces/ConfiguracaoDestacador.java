@@ -10,19 +10,20 @@ import java.util.regex.Pattern;
 
 public class ConfiguracaoDestacador {
 
-    private ConfiguracaoDestacador(){}
-    private static final String[] PALAVRAS_RESERVADAS = new String[] {
+    private ConfiguracaoDestacador() {
+    }
+
+    private static final String[] PALAVRAS_RESERVADAS = new String[]{
             "do", "else", "false", "fun", "if", "in", "main", "out", "repeat", "true", "while"
     };
-    private static final String PALAVRA_RESERVADA_PADRAO =
+    private static final String RESERVADA_PADRAO =
             "\\b(" + String.join("|", PALAVRAS_RESERVADAS) + ")\\b";
-    private static final String[] PREFIXOS = new String[] {
+    private static final String[] PREFIXOS = new String[]{
             "_i", "_f", "_b", "_s"
     };
 
     private static final String PARENTESES_PADRAO = "[()]";
     private static final String CHAVES_PADRAO = "[{}]";
-    private static final String PONTO_VIRGULA_PADRAO = ";";
     private static final String STRING_PADRAO = "\"([^\"\\\\]|\\\\.)*\"";
     private static final String COMENTARIO_PADRAO =
             "#[^\n]*" + "|" + "\\[[^\\[\\]]*\\]";
@@ -31,17 +32,21 @@ public class ConfiguracaoDestacador {
                     + "(([a-z]|[A-Z][a-zA-Z0-9])([a-zA-Z0-9]|[A-Z][a-zA-Z0-9])*[A-Z]?|[A-Z])";
     private static final String PREFIXO_PADRAO =
             "(" + String.join("|", PREFIXOS) + ")(?=" + IDENTIFICADOR_PADRAO + ")";
-    private static final Pattern PADRAO = Pattern.compile(
-                "(?<KEYWORD>" + PALAVRA_RESERVADA_PADRAO + ")"
-                    + "|(?<PAREN>" + PARENTESES_PADRAO + ")"
-                    + "|(?<BRACE>" + CHAVES_PADRAO + ")"
-                    + "|(?<SEMICOLON>" + PONTO_VIRGULA_PADRAO + ")"
-                    + "|(?<STRING>" + STRING_PADRAO + ")"
-                    + "|(?<COMMENT>" + COMENTARIO_PADRAO + ")"
-                    + "|(?<ID>" + IDENTIFICADOR_PADRAO + ")"
-                    + "|(?<PREFIX>" + PREFIXO_PADRAO + ")"
-            );
 
+    public static final String NUMERO_PADRAO = "([1-9][0-9]*|0)(\\.[0-9]+)?";
+
+
+    private static final Pattern PADRAO = Pattern.compile(
+            "(?<RESERVADA>" + RESERVADA_PADRAO + ")"
+                    + "|(?<PAREN>" + PARENTESES_PADRAO + ")"
+                    + "|(?<CHAVE>" + CHAVES_PADRAO + ")"
+                    + "|(?<STRING>" + STRING_PADRAO + ")"
+                    + "|(?<COMENTARIO>" + COMENTARIO_PADRAO + ")"
+                    + "|(?<NUMERO>" + NUMERO_PADRAO + ")"
+                    + "|(?<ID>" + IDENTIFICADOR_PADRAO + ")"
+                    + "|(?<PREFIXO>" + PREFIXO_PADRAO + ")"
+
+    );
 
     public static StyleSpans<Collection<String>> computarDestaque(String texto) {
         Matcher matcher = PADRAO.matcher(texto);
@@ -49,22 +54,22 @@ public class ConfiguracaoDestacador {
         StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
         while (matcher.find()) {
             String styleClass = null;
-            if (matcher.group("KEYWORD") != null) {
-                styleClass = "keyword";
+            if (matcher.group("RESERVADA") != null) {
+                styleClass = "reservada";
             } else if (matcher.group("PAREN") != null) {
                 styleClass = "paren";
-            } else if (matcher.group("BRACE") != null) {
-                styleClass = "brace";
-            } else if (matcher.group("SEMICOLON") != null) {
-                styleClass = "semicolon";
+            } else if (matcher.group("CHAVE") != null) {
+                styleClass = "chave";
             } else if (matcher.group("STRING") != null) {
                 styleClass = "string";
-            } else if (matcher.group("COMMENT") != null) {
-                styleClass = "comment";
+            } else if (matcher.group("COMENTARIO") != null) {
+                styleClass = "comentario";
             } else if (matcher.group("ID") != null) {
                 styleClass = "id";
-            } else if (matcher.group("PREFIX") != null) {
-                styleClass= "prefix";
+            } else if (matcher.group("PREFIXO") != null) {
+                styleClass = "prefixo";
+            } else if (matcher.group("NUMERO") != null) {
+                styleClass = "numero";
             }
             spansBuilder.add(Collections.emptyList(), matcher.start() - lastKwEnd);
             spansBuilder.add(Collections.singleton(styleClass), matcher.end() - matcher.start());
@@ -73,4 +78,5 @@ public class ConfiguracaoDestacador {
         spansBuilder.add(Collections.emptyList(), texto.length() - lastKwEnd);
         return spansBuilder.create();
     }
+
 }

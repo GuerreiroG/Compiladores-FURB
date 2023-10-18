@@ -14,7 +14,7 @@ import javafx.scene.control.Label;
 import javafx.scene.input.*;
 import javafx.stage.FileChooser;
 import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.model.PlainTextChange;
+import org.fxmisc.richtext.model.*;
 import org.reactfx.EventStream;
 
 import java.io.BufferedWriter;
@@ -25,8 +25,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.ResourceBundle;
+import java.util.*;
 import java.util.function.IntFunction;
+
 
 public class CompiladorController implements Initializable {
 
@@ -246,8 +247,10 @@ public class CompiladorController implements Initializable {
     private void configurarDestaque() {
         codeArea
                 .multiPlainChanges()
-                .successionEnds(Duration.ofMillis(200))
-                .subscribe(ignore -> codeArea.setStyleSpans(0, ConfiguracaoDestacador.computarDestaque(codeArea.getText())));
+                .successionEnds(Duration.ofMillis(100))
+                .subscribe(ignore -> codeArea.setStyleSpans(
+                        0, ConfiguracaoDestacador.computarDestaque(codeArea.getText()))
+                );
     }
 
     private void configurarTamanhoFonte() {
