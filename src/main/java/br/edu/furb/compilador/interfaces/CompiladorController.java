@@ -1,8 +1,6 @@
 package br.edu.furb.compilador.interfaces;
 
-import br.edu.furb.compilador.gals.LexicalError;
-import br.edu.furb.compilador.gals.Lexico;
-import br.edu.furb.compilador.gals.Token;
+import br.edu.furb.compilador.gals.*;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -78,7 +76,30 @@ public class CompiladorController implements Initializable {
     public void compilar() {
         areaMensagens.clear();
         Lexico lexico = new Lexico();
+        Sintatico sintatico = new Sintatico();
+        Semantico semantico = new Semantico();
+
         lexico.setInput(codeArea.getText());
+
+        try {
+            sintatico.parse(lexico, semantico);
+            areaMensagens.insertText(0, "programa compilado com sucesso");
+        } catch (LexicalError e) {
+            int linha = codeArea.offsetToPosition(e.getPosition(), null).getMajor() + 1;
+            String lexema = e.getLexeme() != null ? (e.getLexeme() + " ") : "";
+            String mensagem = String.format("linha %d: %s%s", linha, lexema, e.getMessage());
+            areaMensagens.clear();
+            areaMensagens.insertText(0, mensagem);
+        } catch (SyntaticError e) {
+            System.out.println(e.getPosition() + " símbolo encontrado: na entrada " + e.getMessage());
+            String mensagem = "Erro na linha %d - encontrado %s\n                  %s";
+            int linha = codeArea.offsetToPosition(e.getPosition(), null).getMajor() + 1;
+            areaMensagens.clear();
+            areaMensagens.insertText(0, String.format(mensagem, linha,  e.getLexeme(), e.getMessage()));
+        } catch (SemanticError e) {
+            // trata erros semanticos
+        }
+        /*
         try {
             Token t;
             StringBuilder lexemas = new StringBuilder();
@@ -91,12 +112,10 @@ public class CompiladorController implements Initializable {
             areaMensagens.insertText(0, lexemas.toString());
         }
         catch ( LexicalError e ) {
-            int linha = codeArea.offsetToPosition(e.getPosition(), null).getMajor() + 1;
-            String lexema = e.getLexeme() != null ? (e.getLexeme() + " ") : "";
-            String mensagem = String.format("linha %d: %s%s", linha, lexema, e.getMessage());
-            areaMensagens.clear();
-            areaMensagens.insertText(0, mensagem);
+
         }
+
+         */
     }
 
     public String getClasse(int id, int posicao, String lexema) throws LexicalError {
@@ -226,20 +245,20 @@ public class CompiladorController implements Initializable {
             String textoInserido = event.getInserted();
             int posicaoInsercao = event.getPosition();
             switch (textoInserido) {
-                case "(":
+                case "(" -> {
                     codeArea.replaceText(posicaoInsercao, posicaoInsercao + 1, "()");
                     codeArea.moveTo(posicaoInsercao + 1);
-                    break;
-                case "[":
+                }
+                case "[" -> {
                     codeArea.replaceText(posicaoInsercao, posicaoInsercao + 1, "[]");
                     codeArea.moveTo(posicaoInsercao + 1);
-                    break;
-                case "{":
+                }
+                case "{" -> {
                     codeArea.replaceText(posicaoInsercao, posicaoInsercao + 1, "{}");
                     codeArea.moveTo(posicaoInsercao + 1);
-                    break;
-                default:
-                    break;
+                }
+                default -> {
+                }
             }
         });
     }
@@ -247,7 +266,7 @@ public class CompiladorController implements Initializable {
     private void configurarDestaque() {
         codeArea
                 .multiPlainChanges()
-                .successionEnds(Duration.ofMillis(100))
+                .successionEnds(Duration.ofMillis(50))
                 .subscribe(ignore -> codeArea.setStyleSpans(
                         0, ConfiguracaoDestacador.computarDestaque(codeArea.getText()))
                 );

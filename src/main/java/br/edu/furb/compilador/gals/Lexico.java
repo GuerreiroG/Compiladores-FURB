@@ -47,12 +47,20 @@ public class Lexico implements Constants {
             }
         }
         if (endState < 0 || (endState != state && tokenForState(lastState) == -2)) {
-            String lexeme = input.substring(start, position);
+            String substring = input.substring(start);
+            StringBuilder lexeme = new StringBuilder();
+            for (int i = 0; i < substring.length(); i++) {
+                char theChar = substring.charAt(i);
+                if (theChar == ' ') {
+                    break;
+                }
+                lexeme.append(substring.charAt(i));
+            }
             switch (lastState) {
-                case 3, 20, 29, 30, 36:
+                case 3, 20, 28, 29, 30, 36:
                     throw new LexicalError(SCANNER_ERROR[lastState], start);
                 default:
-                    throw new LexicalError(SCANNER_ERROR[lastState], start, lexeme);
+                    throw new LexicalError(SCANNER_ERROR[lastState], start, lexeme.toString());
             }
         }
 

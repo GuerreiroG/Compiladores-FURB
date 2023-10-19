@@ -1,12 +1,15 @@
 #Options
 GenerateScanner = true
-GenerateParser = false
+GenerateParser = true
 Language = Java
 ScannerName = Lexico
+ParserName = Sintatico
+SemanticName = Semantico
 Package = br.edu.furb.compilador.gals
 ScannerCaseSensitive = true
 ScannerTable = Compact
-Input = String
+Input = Stream
+Parser = SLR
 #RegularDefinitions
 prefixo: _i | _f | _b | _s
 maiusculo: [A-Z]
@@ -82,3 +85,94 @@ while = palavra_reservada: "while"
 
 // bloco
 :! {comentario_bloco}
+#NonTerminals
+<programa>
+
+<lista_instrucoes>
+<lista_instrucoes1>
+
+<instrucao>
+
+<declaracao_constante>
+
+<declaracao_variaveis>
+
+<comando>
+
+<lista_identificadores>
+<lista_identificadores1>
+
+<valor>
+
+<cmd_atribuicao>
+
+<cmd_entrada>
+
+<lista_entrada>
+<lista_entrada1>
+
+<entrada>
+
+<cmd_saida>
+
+<cmd_selecao>
+<cmd_selecao1>
+
+<cmd_repeticao>
+
+<lista_expressoes>
+<lista_expressoes1>
+
+<lista_comandos>
+<lista_comandos1>
+
+<expressao>
+#Grammar
+<programa> ::= fun main "{" <lista_instrucoes> "}";
+
+<lista_instrucoes> ::= <instrucao> ";" <lista_instrucoes1>;
+<lista_instrucoes1> ::=  <lista_instrucoes> | î;
+
+<instrucao> ::= <declaracao_constante> | <declaracao_variaveis> | <comando>;
+
+<declaracao_constante> ::= <lista_identificadores> ":" <valor>;
+
+<lista_identificadores> ::= identificador <lista_identificadores1>;
+<lista_identificadores1> ::= "," <lista_identificadores> | î;
+
+<valor> ::= int | float | string | true | false;
+
+
+<declaracao_variaveis> ::= <lista_identificadores>;
+
+<comando> ::= <cmd_atribuicao> | <cmd_entrada> | <cmd_saida> | <cmd_selecao> | <cmd_repeticao>;
+
+<cmd_atribuicao> ::= <lista_identificadores> "=" <expressao>;
+
+<cmd_entrada> ::= in "(" <lista_entrada> ")";
+
+<lista_entrada> ::= <entrada> <lista_entrada1>;
+<lista_entrada1> ::= î | ";" <lista_entrada>;
+
+<entrada> ::= string "," <lista_identificadores> | <lista_identificadores>;
+
+<cmd_saida> ::= out "(" <lista_expressoes> ")";
+
+<lista_expressoes> ::=  <expressao> <lista_expressoes1>;
+<lista_expressoes1> ::= î | "," <lista_expressoes>;
+
+<cmd_selecao> ::= if "(" <expressao> ")" "{" <lista_comandos> "}" <cmd_selecao1>;
+<cmd_selecao1> ::= î | else "{" <lista_comandos> "}";
+
+<lista_comandos> ::= <comando> ";" <lista_comandos1>;
+<lista_comandos1> ::= î | <lista_comandos>;
+
+<cmd_repeticao> ::= while "(" <expressao> ")" do "{" <lista_comandos> "}" 
+		  | repeat "{" <lista_comandos> "}" while "(" <expressao> ")";
+
+
+
+
+
+
+
