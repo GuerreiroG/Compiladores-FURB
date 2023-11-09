@@ -40,7 +40,7 @@
 }
 
 #codeArea .paragraph-box:has-caret{
-    -fx-background-color: #f1f1f0;
+    -fx-background-color: #f6f6f6;
 }
 
 #areaMensagens {

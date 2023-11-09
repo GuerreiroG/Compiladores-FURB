@@ -6,7 +6,7 @@ import static br.edu.furb.compilador.gals.ParserConstants.*;
 
 public class Sintatico implements Constants
 {
-    private Stack stack = new Stack();
+    private final Stack stack = new Stack();
     private Token currentToken;
     private Token previousToken;
     private Lexico scanner;
@@ -105,7 +105,8 @@ public class Sintatico implements Constants
 
         currentToken = scanner.nextToken();
 
-        while ( ! step() )
-            ;
+        while ( ! step() );
+
+
     }
 }

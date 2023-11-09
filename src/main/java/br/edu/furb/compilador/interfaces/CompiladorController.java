@@ -84,6 +84,7 @@ public class CompiladorController implements Initializable {
         try {
             sintatico.parse(lexico, semantico);
             areaMensagens.insertText(0, "programa compilado com sucesso");
+            escreverArquivoIL(semantico.getCodigo());
         } catch (LexicalError e) {
             int linha = codeArea.offsetToPosition(e.getPosition(), null).getMajor() + 1;
             String lexema = e.getLexeme() != null ? (e.getLexeme() + " ") : "";
@@ -116,6 +117,16 @@ public class CompiladorController implements Initializable {
         }
 
          */
+    }
+
+    public void escreverArquivoIL(String codigo) {
+        try (FileWriter writer = new FileWriter(arquivoAtual.getPath() + ".il", false);
+             BufferedWriter bufferedWriter = new BufferedWriter(writer)
+        ) {
+            bufferedWriter.write(codigo);
+        } catch (IOException ioe) {
+            mostrarErro("Um erro ocorreu ao gerar o arquivo de saida. Por favor, tente novamente.");
+        }
     }
 
     public String getClasse(int id, int posicao, String lexema) throws LexicalError {

@@ -1,8 +1,8 @@
 package br.edu.furb.compilador.gals;
 
-public interface Constants extends ScannerConstants {
-    int EPSILON = 0;
-    int DOLLAR = 1;
+public interface Constants extends ScannerConstants, ParserConstants {
+    int EPSILON  = 0;
+    int DOLLAR   = 1;
 
     int t_palavra_reservada = 2;
     int t_identificador = 3;
