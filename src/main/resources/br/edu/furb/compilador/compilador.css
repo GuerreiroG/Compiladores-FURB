@@ -6,17 +6,19 @@
 }
 
 .button {
-    -fx-background-color: rgba(211, 211, 211, 0.39);
+    -fx-background-color: #eae8e8;
     -fx-border-radius: 0;
     -fx-border-width: 0;
     -fx-border-color: black;
-    -fx-padding: 3;
+    -fx-padding: 4;
     -fx-pref-width: 100;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.11), 1, 1.0, 2, 2);
 }
 
 .button:hover {
     -fx-cursor: pointer;
     -fx-background-color: lightgray;
+    -fx-effect: dropshadow(one-pass-box, transparent, 1, 20, 2, 2);
 }
 
 #codeArea .styled-text-area .text {
@@ -28,7 +30,7 @@
     -fx-font-family: "Source Code Pro";
     -fx-font-style: italic;
     -fx-padding: 0 0 0 5;
-    -fx-background-color: lightgray;
+    -fx-background-color: rgb(234, 233, 233);
 }
 
 .lineno .text {
@@ -36,7 +38,7 @@
 }
 
 .coluna-linha {
-    -fx-fill: lightgray;
+    -fx-fill: rgb(234, 233, 233);
 }
 
 #codeArea .paragraph-box:has-caret{
