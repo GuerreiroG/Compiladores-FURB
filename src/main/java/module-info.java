@@ -7,7 +7,7 @@ module br.edu.furb.compilador {
 
     opens br.edu.furb.compilador to javafx.fxml;
     exports br.edu.furb.compilador;
-    exports br.edu.furb.compilador.interfaces;
+    exports br.edu.furb.compilador.ui;
 
-    opens br.edu.furb.compilador.interfaces to javafx.fxml;
+    opens br.edu.furb.compilador.ui to javafx.fxml;
 }

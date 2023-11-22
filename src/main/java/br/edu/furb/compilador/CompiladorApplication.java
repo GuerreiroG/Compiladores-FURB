@@ -1,6 +1,6 @@
 package br.edu.furb.compilador;
 
-import br.edu.furb.compilador.interfaces.CompiladorController;
+import br.edu.furb.compilador.ui.CompiladorController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

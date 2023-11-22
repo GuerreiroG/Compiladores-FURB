@@ -1,4 +1,4 @@
-package br.edu.furb.compilador.interfaces;
+package br.edu.furb.compilador.ui;
 
 import br.edu.furb.compilador.gals.*;
 import javafx.beans.binding.Bindings;
@@ -51,7 +51,6 @@ public class CompiladorController implements Initializable {
     }
 
     public void configurarAtalhos(Scene scene) {
-
         KeyCodeCombination combinacaoNovo =
                 new KeyCodeCombination(KeyCode.N, KeyCombination.CONTROL_DOWN);
         KeyCodeCombination combinacaoAbrir =
@@ -83,6 +82,7 @@ public class CompiladorController implements Initializable {
 
         try {
             sintatico.parse(lexico, semantico);
+            areaMensagens.clear();
             areaMensagens.insertText(0, "programa compilado com sucesso");
             escreverArquivoIL(semantico.getCodigo());
         } catch (LexicalError e) {
@@ -100,23 +100,6 @@ public class CompiladorController implements Initializable {
         } catch (SemanticError e) {
             // trata erros semanticos
         }
-        /*
-        try {
-            Token t;
-            StringBuilder lexemas = new StringBuilder();
-            while ((t = lexico.nextToken()) != null) {
-                int linha = codeArea.offsetToPosition(t.getPosition(), null).getMajor() + 1;
-                lexemas.append(String.format("%-8s%-20s%s%n", linha,
-                        getClasse(t.getId(), t.getPosition(), t.getLexeme()), t.getLexeme()));
-            }
-            lexemas.append(String.format("%n        %s", "programa compilado com sucesso"));
-            areaMensagens.insertText(0, lexemas.toString());
-        }
-        catch ( LexicalError e ) {
-
-        }
-
-         */
     }
 
     public void escreverArquivoIL(String codigo) {
@@ -266,6 +249,10 @@ public class CompiladorController implements Initializable {
                 }
                 case "{" -> {
                     codeArea.replaceText(posicaoInsercao, posicaoInsercao + 1, "{}");
+                    codeArea.moveTo(posicaoInsercao + 1);
+                }
+                case "\"" -> {
+                    codeArea.replaceText(posicaoInsercao, posicaoInsercao + 1, "\"\"");
                     codeArea.moveTo(posicaoInsercao + 1);
                 }
                 default -> {

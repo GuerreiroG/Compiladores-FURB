@@ -1,4 +1,4 @@
-package br.edu.furb.compilador.interfaces;
+package br.edu.furb.compilador.ui;
 
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;

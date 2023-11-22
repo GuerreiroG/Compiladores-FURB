@@ -7,7 +7,7 @@
 <?import org.fxmisc.richtext.*?>
 <?import org.kordamp.ikonli.javafx.*?>
 
-<?import br.edu.furb.compilador.interfaces.MyCodeArea?>
+<?import br.edu.furb.compilador.ui.MyCodeArea?>
 <BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1">
     <top>
       <ToolBar maxHeight="1.7976931348623157E308" minHeight="70.0" minWidth="900.0" prefHeight="70.0" prefWidth="900.0" BorderPane.alignment="CENTER">
@@ -43,7 +43,7 @@
         </Button>
         <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#compilar" text="compilar [F7]">
             <graphic>
-                <FontIcon iconLiteral="mdi2f-file-cog" iconSize="24" />
+                <FontIcon iconLiteral="mdi2p-play" iconSize="24" />
             </graphic>
         </Button>
         <Button contentDisplay="TOP" mnemonicParsing="false" onAction="#mostrarEquipe" text="equipe [F1]">
