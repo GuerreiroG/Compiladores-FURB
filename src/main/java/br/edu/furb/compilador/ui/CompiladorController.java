@@ -103,40 +103,15 @@ public class CompiladorController implements Initializable {
     }
 
     public void escreverArquivoIL(String codigo) {
-        try (FileWriter writer = new FileWriter(arquivoAtual.getPath() + ".il", false);
+        String[] arquivoSeparado = arquivoAtual.getPath().split("\\.");
+        String novoCaminho = String.join(".",
+                                         Arrays.copyOfRange(arquivoSeparado, 0, arquivoSeparado.length-1));
+        try (FileWriter writer = new FileWriter(novoCaminho + ".il", false);
              BufferedWriter bufferedWriter = new BufferedWriter(writer)
         ) {
             bufferedWriter.write(codigo);
         } catch (IOException ioe) {
             mostrarErro("Um erro ocorreu ao gerar o arquivo de saida. Por favor, tente novamente.");
-        }
-    }
-
-    public String getClasse(int id, int posicao, String lexema) throws LexicalError {
-        switch (id) {
-            case 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17 -> {
-                return  "palavra_reservada";
-            }
-            case 3 -> {
-                return "identificador";
-            }
-            case 4 -> {
-                return "constante_int";
-            }
-            case 5 -> {
-                return "constante_float";
-            }
-            case 6 -> {
-                return "constante_string";
-            }
-            case 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36 -> {
-                return "simbolo especial";
-            }
-            case 2 ->
-                throw new LexicalError("palavra reservada inválida", posicao, lexema);
-            default -> {
-                return "simbolo desconhecido";
-            }
         }
     }
 
