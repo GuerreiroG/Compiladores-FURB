@@ -92,7 +92,6 @@ public class CompiladorController implements Initializable {
             areaMensagens.clear();
             areaMensagens.insertText(0, mensagem);
         } catch (SyntaticError e) {
-            System.out.println(e.getPosition() + " símbolo encontrado: na entrada " + e.getMessage());
             String mensagem = "Erro na linha %d - encontrado %s\n                  %s";
             int linha = codeArea.offsetToPosition(e.getPosition(), null).getMajor() + 1;
             areaMensagens.clear();
@@ -206,6 +205,17 @@ public class CompiladorController implements Initializable {
         configurarTamanhoFonte();
         configurarDestaque();
         configurarAutoFechamentos();
+        configurarTab();
+    }
+
+    public void configurarTab() {
+        codeArea.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if (event.getCode() == KeyCode.TAB) {
+                int posicaoCursor = codeArea.getCaretPosition();
+                codeArea.replaceText(posicaoCursor, posicaoCursor, "    ");
+                event.consume();
+            }
+        });
     }
 
     private void configurarAutoFechamentos() {
@@ -229,8 +239,6 @@ public class CompiladorController implements Initializable {
                 case "\"" -> {
                     codeArea.replaceText(posicaoInsercao, posicaoInsercao + 1, "\"\"");
                     codeArea.moveTo(posicaoInsercao + 1);
-                }
-                default -> {
                 }
             }
         });

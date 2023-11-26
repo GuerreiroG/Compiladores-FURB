@@ -11,15 +11,15 @@ public class Sintatico implements Constants {
     private Lexico scanner;
     private Semantico semanticAnalyser;
 
-    private static final boolean isTerminal(int x) {
+    private static boolean isTerminal(int x) {
         return x < FIRST_NON_TERMINAL;
     }
 
-    private static final boolean isNonTerminal(int x) {
+    private static boolean isNonTerminal(int x) {
         return x >= FIRST_NON_TERMINAL && x < FIRST_SEMANTIC_ACTION;
     }
 
-    private static final boolean isSemanticAction(int x) {
+    private static boolean isSemanticAction(int x) {
         return x >= FIRST_SEMANTIC_ACTION;
     }
 

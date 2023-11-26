@@ -4,8 +4,9 @@
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/br/edu/furb/compilador/gals/ParserConstants.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/br/edu/furb/compilador/gals/ScannerConstants.java" charset="windows-1252" />
-    <file url="file://$PROJECT_DIR$/src/main/java/br/edu/furb/compilador/gals/Semantico.java" charset="windows-1252" />
+    <file url="file://$PROJECT_DIR$/src/main/java/br/edu/furb/compilador/gals/Semantico.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java/br/edu/furb/compilador/gals/Sintatico.java" charset="windows-1252" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
+    <file url="PROJECT" charset="UTF-8" />
   </component>
 </project>

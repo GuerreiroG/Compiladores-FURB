@@ -3,33 +3,16 @@ package br.edu.furb.compilador.gals;
 import java.util.*;
 
 public class Semantico implements Constants {
-    // declarar atributos conrrespondentes aos atributos semanticos
-    // - operador_relacional (inicialmente igual a ""): usado para armazenar o operador relacional reconhecido pela ação
-    // #108, para uso posterior na ação #109
-    // - código_objeto: usado para armazenar o código objeto gerado
-    // - pilha_tipos (inicialmente vazia): usada para determinar o tipo de uma expressão durante a compilação do
-    // programa.
-
-    private Stack<String> pilhaTipos;
-    private Stack<String> pilhaRotulos;
-    private List<Token> listaId;
-    private HashMap<String, Simbolo> tabelaSimbolos;
-    private StringBuilder codigo;
-    private String operadorRelacional;
-
-    private final String TIPO_INTEIRO = "int64";
-    private final String TIPO_FLOAT = "float64";
-    private final String TIPO_STRING = "string";
-    private final String TIPO_BOOL = "bool";
-
-    public Semantico() {
-        pilhaTipos = new Stack<>();
-        pilhaRotulos = new Stack<>();
-        codigo = new StringBuilder();
-        operadorRelacional = "";
-        listaId = new ArrayList<>();
-
-    }
+    private final Deque<String> pilhaTipos = new ArrayDeque<>();
+    private final Deque<String> pilhaRotulos = new ArrayDeque<>();
+    private final List<Token> listaId = new ArrayList<>();
+    private final HashMap<String, Simbolo> tabelaSimbolos = new HashMap<>();
+    private final StringBuilder codigo = new StringBuilder();
+    private String operadorRelacional = "";
+    private static final String TIPO_INTEIRO = "int64";
+    private static final String TIPO_FLOAT = "float64";
+    private static final String TIPO_STRING = "string";
+    private static final String TIPO_BOOL = "bool";
 
     public void executeAction(int action, Token token) throws SemanticError {
         switch (action) {
@@ -51,13 +34,25 @@ public class Semantico implements Constants {
             case 115 -> acao115(token);
             case 116 -> acao116(token);
             case 117 -> acao117();
+            case 118 -> acao118(token);
+            case 119 -> acao119();
+            case 120 -> acao120();
+            case 121 -> acao121();
+            case 122 -> acao122(token);
+            case 123 -> acao123();
+            case 124 -> acao124(token);
+            case 125 -> acao125(token);
+            case 126 -> acao126(token);
+            case 127 -> acao127(token);
+            case 128 -> acao128();
+            case 129 -> acao129();
+            case 130 -> acao130(token);
             case 131 -> acao131(token);
         }
-        System.out.println("Ação #"+action+", Token: "+token);
     }
 
     public void adicionarCodigo(String texto) {
-        codigo.append(texto).append("\n");
+        codigo.append("      ").append(texto).append("\n");
     }
 
     public String getCodigo() {
@@ -66,20 +61,22 @@ public class Semantico implements Constants {
 
     public void acao100() {
         adicionarCodigo("""
+
                 .assembly extern mscorlib {}
                 .assembly _exemplo{}
                 .module _exemplo.exe
-                                
+
                 .class public _exemplo{
-                   .method static public void _principal(){
-                   .entrypoint
+                   .method static public void _principal() {
+                      .entrypoint
                 """);
     }
 
     public void acao101() {
         adicionarCodigo("""
-                   ret
-                 }
+
+                      ret
+                   }
                 }
                 """);
     }
@@ -130,8 +127,8 @@ public class Semantico implements Constants {
         pilhaTipos.pop();
         pilhaTipos.push(TIPO_BOOL);
         switch (operadorRelacional) {
-            case ">"  -> adicionarCodigo("cgt");
-            case "<"  -> adicionarCodigo("clt");
+            case ">" -> adicionarCodigo("cgt");
+            case "<" -> adicionarCodigo("clt");
             case "==" -> adicionarCodigo("ceq");
             case "!=" -> {
                 adicionarCodigo("ceq");
@@ -207,6 +204,62 @@ public class Semantico implements Constants {
         adicionarCodigo("mul");
     }
 
+    public void acao118(Token token) throws SemanticError {
+        String tipo = pilhaTipos.pop();
+        if (!TIPO_BOOL.equals(tipo)) {
+            throw new SemanticError("expressÃ£o incompatÃ­vel em comando de seleÃ§Ã£o", token.getPosition());
+        }
+        String rotulo = String.format("novo_rotulo%d", pilhaTipos.size() + 1);
+        adicionarCodigo(String.format("brfalse %s", rotulo));
+        pilhaRotulos.push(rotulo);
+    }
+
+    public void acao119() {
+        String rotulo = pilhaRotulos.pop();
+        adicionarCodigo(String.format("%s:", rotulo));
+        pilhaRotulos.push(rotulo);
+    }
+
+    public void acao120() {
+        String rotulo = String.format("novo_rotulo%d", pilhaTipos.size() + 1);
+        adicionarCodigo("br novo_rotulo2");
+        String rotuloIf = pilhaRotulos.pop();
+        adicionarCodigo(String.format("%s:", rotuloIf));
+        pilhaRotulos.push(rotulo);
+    }
+
+    public void acao121() {
+        String rotulo = String.format("novo_rotulo%d", pilhaTipos.size() + 1);
+        adicionarCodigo(String.format("%s:", rotulo));
+        pilhaRotulos.push(rotulo);
+    }
+
+    public void acao122(Token token) throws SemanticError {
+        String tipo = pilhaTipos.pop();
+        if (!TIPO_BOOL.equals(tipo)) {
+            throw new SemanticError("expressÃ£o incompatÃ­vel em comando de repetiÃ§Ã£o", token.getPosition());
+        }
+        String rotulo = String.format("novo_rotulo%d", pilhaTipos.size() + 1);
+        adicionarCodigo(String.format("brfalse %s", rotulo));
+        pilhaRotulos.push(rotulo);
+    }
+
+    public void acao123() {
+        String rotulo2 = pilhaRotulos.pop();
+        String rotulo1 = pilhaRotulos.pop();
+        adicionarCodigo(String.format("br %s", rotulo1));
+        adicionarCodigo(String.format("%s:", rotulo2));
+    }
+
+    public void acao124(Token token) throws SemanticError {
+        String tipo = pilhaTipos.pop();
+        if (!TIPO_BOOL.equals(tipo)) {
+            throw new SemanticError("expressÃ£o incompatÃ­vel em comando de repetiÃ§Ã£o", token.getPosition());
+        }
+        String rotulo = pilhaRotulos.pop();
+        adicionarCodigo(String.format("brtrue %s", rotulo));
+    }
+
     public void acao125(Token token) {
         listaId.add(token);
     }
@@ -215,10 +268,14 @@ public class Semantico implements Constants {
         for (Token token : listaId) {
             String identificador = token.getLexeme();
             if (tabelaSimbolos.containsKey(identificador)) {
-                throw new SemanticError(String.format("%s já declarado", identificador), token.getPosition());
+                throw new SemanticError(String.format("%s jÃ¡ declarado", identificador), token.getPosition());
             }
             String tipo = getTipoDoIdentificador(identificador);
-            tabelaSimbolos.put(identificador, new Simbolo(identificador, tipo, valorToken.getLexeme()));
+            String valor = valorToken.getLexeme();
+            if (valor.startsWith("_")) {
+                valor = null;
+            }
+            tabelaSimbolos.put(identificador, new Simbolo(identificador, tipo, valor));
         }
         listaId.clear();
     }
@@ -236,13 +293,17 @@ public class Semantico implements Constants {
     }
 
     public void acao127(Token valorToken) throws SemanticError {
-        for (Token token: listaId) {
+        for (Token token : listaId) {
             String identificador = token.getLexeme();
             if (tabelaSimbolos.containsKey(identificador)) {
-                throw new SemanticError(String.format("%s já declarado", identificador), token.getPosition());
+                throw new SemanticError(String.format("%s jÃ¡ declarado", identificador), token.getPosition());
             }
             String tipo = getTipoDoIdentificador(identificador);
-            tabelaSimbolos.put(identificador, new Simbolo(identificador, tipo, valorToken.getLexeme()));
+            String valor = valorToken.getLexeme();
+            if (valor.startsWith("_")) {
+                valor = null;
+            }
+            tabelaSimbolos.put(identificador, new Simbolo(identificador, tipo, valor));
             adicionarCodigo(String.format(".locals(%s %s)", tipo, identificador));
         }
         listaId.clear();
@@ -255,13 +316,13 @@ public class Semantico implements Constants {
         for (Token token : listaId) {
             String identificador = token.getLexeme();
             if (!tabelaSimbolos.containsKey(identificador)) {
-                throw new SemanticError(String.format("%s não declarado", identificador), token.getPosition());
+                throw new SemanticError(String.format("%s nÃ£o declarado", identificador), token.getPosition());
             }
-            adicionarCodigo(String.format("stloc %s", identificador));
             Simbolo simbolo = tabelaSimbolos.get(identificador);
             if (TIPO_INTEIRO.equals(simbolo.tipo())) {
                 adicionarCodigo("conv.i8");
             }
+            adicionarCodigo(String.format("stloc %s", identificador));
         }
         listaId.clear();
     }
@@ -270,29 +331,48 @@ public class Semantico implements Constants {
         for (Token token : listaId) {
             String identificador = token.getLexeme();
             if (!tabelaSimbolos.containsKey(identificador)) {
-                throw new SemanticError(String.format("%s não declarado", identificador), token.getPosition());
+                throw new SemanticError(String.format("%s nÃ£o declarado", identificador), token.getPosition());
             }
+            Simbolo simbolo = tabelaSimbolos.get(identificador);
+            adicionarCodigo("call string [mscorlib]System.Console::ReadLine()");
+            String tipo = simbolo.tipo();
+            if (!TIPO_STRING.equals(tipo)) {
+                String classe = getClasse(tipo);
+                adicionarCodigo(String.format("call %s [mscorlib]System.%s::Parse(string)", tipo, classe));
+            }
+            adicionarCodigo(String.format("stloc %s", identificador));
         }
+        listaId.clear();
+    }
+
+    public String getClasse(String tipo) {
+        return switch (tipo) {
+            case TIPO_BOOL -> "Boolean";
+            case TIPO_INTEIRO -> "Int64";
+            case TIPO_FLOAT -> "Float64";
+            default -> "String";
+        };
     }
 
     public void acao130(Token token) {
-        adicionarCodigo(String.format("ldstr %s", token));
+        adicionarCodigo(String.format("ldstr %s", token.getLexeme()));
         adicionarCodigo("call void [mscorlib]System.Console::Write(string)");
     }
 
     public void acao131(Token token) throws SemanticError {
         String lexema = token.getLexeme();
         if (!tabelaSimbolos.containsKey(lexema)) {
-            throw new SemanticError(String.format("%s não declarado", lexema), token.getPosition());
+            throw new SemanticError(String.format("%s nÃ£o declarado", lexema), token.getPosition());
         }
         Simbolo simbolo = tabelaSimbolos.get(lexema);
         String valor = simbolo.valor();
         String tipo = simbolo.tipo();
+        String identificador = simbolo.id();
         if (simbolo.valor() != null) {
             tratarIdentificadorDeConstante(tipo, valor);
             return;
         }
-        adicionarCodigo(String.format("ldloc %s", valor));
+        adicionarCodigo(String.format("ldloc %s", identificador));
         if (TIPO_INTEIRO.equals(tipo)) {
             adicionarCodigo("conv.r8");
         }
@@ -305,15 +385,9 @@ public class Semantico implements Constants {
                 adicionarCodigo(String.format("ldc.i8 %s", valor));
                 adicionarCodigo("conv.r8");
             }
-            case TIPO_FLOAT -> {
-                adicionarCodigo(String.format("ldc.r8 %s", valor));
-            }
-            case TIPO_STRING -> {
-                adicionarCodigo(String.format("ldstr %s", valor));
-            }
-            case TIPO_BOOL -> {
-                adicionarCodigo(valor.equals("true") ? "ldc.i4.1" : "ldc.i4.0");
-            }
+            case TIPO_FLOAT -> adicionarCodigo(String.format("ldc.r8 %s", valor));
+            case TIPO_STRING -> adicionarCodigo(String.format("ldstr %s", valor));
+            case TIPO_BOOL -> adicionarCodigo(valor.equals("true") ? "ldc.i4.1" : "ldc.i4.0");
         }
         pilhaTipos.push(tipo);
     }
