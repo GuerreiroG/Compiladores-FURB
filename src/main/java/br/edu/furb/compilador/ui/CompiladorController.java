@@ -205,17 +205,33 @@ public class CompiladorController implements Initializable {
         configurarTamanhoFonte();
         configurarDestaque();
         configurarAutoFechamentos();
-        configurarTab();
+        configurarIndentacao();
     }
 
-    public void configurarTab() {
+    public void configurarIndentacao() {
         codeArea.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
             if (event.getCode() == KeyCode.TAB) {
                 int posicaoCursor = codeArea.getCaretPosition();
                 codeArea.replaceText(posicaoCursor, posicaoCursor, "    ");
                 event.consume();
             }
+            if (event.getCode() == KeyCode.ENTER) {
+                int posicaoCursor = codeArea.getCaretPosition();
+                int linhaAtual = codeArea.getCurrentParagraph();
+                String textoLinhaAtual = codeArea.getText(codeArea.getAbsolutePosition(linhaAtual, 0), posicaoCursor);
+                String indentacao = calcularIndentacao(textoLinhaAtual);
+                codeArea.insertText(posicaoCursor, "\n" + indentacao);
+                event.consume();
+            }
         });
+    }
+
+    private String calcularIndentacao(String texto) {
+        int indice = 0;
+        while (indice < texto.length() && Character.isWhitespace(texto.charAt(indice))) {
+            indice++;
+        }
+        return texto.substring(0, indice);
     }
 
     private void configurarAutoFechamentos() {

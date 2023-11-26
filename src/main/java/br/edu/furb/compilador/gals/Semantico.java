@@ -209,7 +209,7 @@ public class Semantico implements Constants {
         if (!TIPO_BOOL.equals(tipo)) {
             throw new SemanticError("expressão incompatível em comando de seleção", token.getPosition());
         }
-        String rotulo = String.format("novo_rotulo%d", pilhaTipos.size() + 1);
+        String rotulo = String.format("novo_rotulo%d", pilhaRotulos.size() + 1);
         adicionarCodigo(String.format("brfalse %s", rotulo));
         pilhaRotulos.push(rotulo);
     }
@@ -221,7 +221,7 @@ public class Semantico implements Constants {
     }
 
     public void acao120() {
-        String rotulo = String.format("novo_rotulo%d", pilhaTipos.size() + 1);
+        String rotulo = String.format("novo_rotulo%d", pilhaRotulos.size() + 1);
         adicionarCodigo("br novo_rotulo2");
         String rotuloIf = pilhaRotulos.pop();
         adicionarCodigo(String.format("%s:", rotuloIf));
@@ -229,7 +229,7 @@ public class Semantico implements Constants {
     }
 
     public void acao121() {
-        String rotulo = String.format("novo_rotulo%d", pilhaTipos.size() + 1);
+        String rotulo = String.format("novo_rotulo%d", pilhaRotulos.size() + 1);
         adicionarCodigo(String.format("%s:", rotulo));
         pilhaRotulos.push(rotulo);
     }
@@ -239,7 +239,7 @@ public class Semantico implements Constants {
         if (!TIPO_BOOL.equals(tipo)) {
             throw new SemanticError("expressão incompatível em comando de repetição", token.getPosition());
         }
-        String rotulo = String.format("novo_rotulo%d", pilhaTipos.size() + 1);
+        String rotulo = String.format("novo_rotulo%d", pilhaRotulos.size() + 1);
         adicionarCodigo(String.format("brfalse %s", rotulo));
         pilhaRotulos.push(rotulo);
     }
